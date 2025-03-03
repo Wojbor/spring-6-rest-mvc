@@ -3,7 +3,6 @@ package amaciag.springframework.spring6restmvc.services;
 import amaciag.springframework.spring6restmvc.model.Beer;
 import amaciag.springframework.spring6restmvc.model.BeerStyle;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -137,12 +136,16 @@ public class BeerServiceImpl implements BeerService {
             existingBeer.setBeerStyle(beer.getBeerStyle());
         }
 
-        if (beer.getUpc() != null) {
+        if (StringUtils.hasText(beer.getUpc())) {
             existingBeer.setUpc(beer.getUpc());
         }
 
         if (beer.getQuantityOnHand() != null) {
             existingBeer.setQuantityOnHand(beer.getQuantityOnHand());
+        }
+
+        if (beer.getPrice() != null) {
+            existingBeer.setPrice(beer.getPrice());
         }
     }
 }

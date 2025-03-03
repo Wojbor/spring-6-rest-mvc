@@ -2,6 +2,7 @@ package amaciag.springframework.spring6restmvc.services;
 
 import amaciag.springframework.spring6restmvc.model.Customer;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -85,5 +86,18 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void deleteById(UUID customerId) {
         customersDataMap.remove(customerId);
+    }
+
+    @Override
+    public void patchCustomer(UUID customerId, Customer customer) {
+        Customer customerToUpdate = customersDataMap.get(customerId);
+
+        if (StringUtils.hasText(customer.getCustomerName())) {
+            customerToUpdate.setCustomerName(customer.getCustomerName());
+        }
+
+        if (customer.getVersion() != null) {
+            customerToUpdate.setVersion(customer.getVersion());
+        }
     }
 }

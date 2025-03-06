@@ -14,13 +14,15 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/customer")
 @Slf4j
 public class CustomerController {
 
     private final CustomerService customerService;
 
-    @PatchMapping("{customerId}")
+    public static final String CUSTOMER_URI = "/api/v1/customer";
+    public static final String CUSTOMER_URI_ID = CUSTOMER_URI + "/{customerId}";
+
+    @PatchMapping(CUSTOMER_URI_ID)
     public ResponseEntity patchCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer) {
 
         customerService.patchCustomer(customerId, customer);
@@ -28,7 +30,7 @@ public class CustomerController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("{customerId}")
+    @DeleteMapping(CUSTOMER_URI_ID)
     private ResponseEntity deleteCustomer(@PathVariable("customerId") UUID customerId) {
 
         customerService.deleteById(customerId);
@@ -36,7 +38,7 @@ public class CustomerController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("{customerId}")
+    @PutMapping(CUSTOMER_URI_ID)
     public ResponseEntity updateCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer) {
 
         customerService.updateCustomerById(customerId, customer);
@@ -44,7 +46,7 @@ public class CustomerController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping
+    @PostMapping(CUSTOMER_URI)
     ResponseEntity createCustomer(@RequestBody Customer customer) {
 
         Customer savedCustomer = customerService.saveCustomer(customer);
@@ -56,14 +58,14 @@ public class CustomerController {
 
     }
 
-    @RequestMapping("{customerId}")
+    @RequestMapping(CUSTOMER_URI_ID)
     public Customer getCustomerById(@PathVariable("customerId") UUID id) {
         log.debug("Get customer by id: " + id);
         return customerService.getCustomerById(id);
     }
 
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping(CUSTOMER_URI)
     public List<Customer> getAllCustomers() {
         log.debug("Get all customers");
         return customerService.listCustomers();

@@ -72,7 +72,7 @@ class BeerControllerTest {
     void updateBeer() throws Exception {
         Beer beer = beerServiceImpl.listBeers().get(0);
 
-        mockMvc.perform(put(BeerController.BEER_URI + "/" + beer.getId()).accept(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put(BeerController.BEER_URI_ID,  beer.getId()).accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beer)))
                 .andExpect(status().isNoContent());
@@ -85,7 +85,7 @@ class BeerControllerTest {
     void deleteBeer() throws Exception {
         Beer beer = beerServiceImpl.listBeers().get(0);
 
-        mockMvc.perform(delete(BeerController.BEER_URI + "/" + beer.getId())
+        mockMvc.perform(delete(BeerController.BEER_URI_ID, beer.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -102,7 +102,7 @@ class BeerControllerTest {
         Map<String, String> beerMap = new HashMap<>();
         beerMap.put("beerName", "Zmiana");
 
-        mockMvc.perform(patch(BeerController.BEER_URI + "/" + beer.getId())
+        mockMvc.perform(patch(BeerController.BEER_URI_ID,  beer.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap)))
@@ -134,7 +134,7 @@ class BeerControllerTest {
 
         given(beerService.getBeerById(testBeer.getId())).willReturn(testBeer);
 
-        mockMvc.perform(get(BeerController.BEER_URI + "/" + testBeer.getId())
+        mockMvc.perform(get(BeerController.BEER_URI_ID, testBeer.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

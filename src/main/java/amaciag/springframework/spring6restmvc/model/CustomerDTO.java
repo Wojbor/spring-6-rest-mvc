@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @Builder
 @Slf4j
-public class Customer {
+public class CustomerDTO {
     private UUID id;
     private String customerName;
     private Integer version;

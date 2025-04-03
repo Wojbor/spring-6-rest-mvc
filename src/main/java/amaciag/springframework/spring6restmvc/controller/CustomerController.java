@@ -1,6 +1,6 @@
 package amaciag.springframework.spring6restmvc.controller;
 
-import amaciag.springframework.spring6restmvc.model.Customer;
+import amaciag.springframework.spring6restmvc.model.CustomerDTO;
 import amaciag.springframework.spring6restmvc.services.CustomerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class CustomerController {
     public static final String CUSTOMER_URI_ID = CUSTOMER_URI + "/{customerId}";
 
     @PatchMapping(CUSTOMER_URI_ID)
-    public ResponseEntity patchCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer) {
+    public ResponseEntity patchCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody CustomerDTO customer) {
 
         customerService.patchCustomer(customerId, customer);
 
@@ -39,7 +39,7 @@ public class CustomerController {
     }
 
     @PutMapping(CUSTOMER_URI_ID)
-    public ResponseEntity updateCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer) {
+    public ResponseEntity updateCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody CustomerDTO customer) {
 
         customerService.updateCustomerById(customerId, customer);
 
@@ -47,9 +47,9 @@ public class CustomerController {
     }
 
     @PostMapping(CUSTOMER_URI)
-    ResponseEntity createCustomer(@RequestBody Customer customer) {
+    ResponseEntity createCustomer(@RequestBody CustomerDTO customer) {
 
-        Customer savedCustomer = customerService.saveCustomer(customer);
+        CustomerDTO savedCustomer = customerService.saveCustomer(customer);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.LOCATION, "/api/v1/customer" + savedCustomer.getId());
@@ -59,14 +59,14 @@ public class CustomerController {
     }
 
     @RequestMapping(CUSTOMER_URI_ID)
-    public Customer getCustomerById(@PathVariable("customerId") UUID id) {
+    public CustomerDTO getCustomerById(@PathVariable("customerId") UUID id) {
         log.debug("Get customer by id: " + id);
         return customerService.getCustomerById(id).orElseThrow(NotFoundException::new);
     }
 
 
     @GetMapping(CUSTOMER_URI)
-    public List<Customer> getAllCustomers() {
+    public List<CustomerDTO> getAllCustomers() {
         log.debug("Get all customers");
         return customerService.listCustomers();
     }

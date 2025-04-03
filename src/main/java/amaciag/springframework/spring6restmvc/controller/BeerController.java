@@ -1,6 +1,6 @@
 package amaciag.springframework.spring6restmvc.controller;
 
-import amaciag.springframework.spring6restmvc.model.Beer;
+import amaciag.springframework.spring6restmvc.model.BeerDTO;
 import amaciag.springframework.spring6restmvc.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class BeerController {
     private final BeerService beerService;
 
     @PatchMapping(BEER_URI_ID)
-    public ResponseEntity updateBeer(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer) {
+    public ResponseEntity updateBeer(@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO beer) {
 
         beerService.patchBeerById(beerId,beer);
 
@@ -39,7 +39,7 @@ public class BeerController {
     }
 
     @PutMapping(BEER_URI_ID)
-    public ResponseEntity updateById(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer) {
+    public ResponseEntity updateById(@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO beer) {
 
         beerService.updateBeerById(beerId, beer);
 
@@ -47,9 +47,9 @@ public class BeerController {
     }
 
     @PostMapping(BEER_URI)
-    public ResponseEntity saveNewBeer(@RequestBody Beer beer) {
+    public ResponseEntity saveNewBeer(@RequestBody BeerDTO beer) {
 
-        Beer savedBeer = beerService.saveNewBeer(beer);
+        BeerDTO savedBeer = beerService.saveNewBeer(beer);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/api/v1/beer/" + savedBeer.getId());
@@ -58,13 +58,13 @@ public class BeerController {
     }
 
     @GetMapping(BEER_URI)
-    public List<Beer> listBeers() {
+    public List<BeerDTO> listBeers() {
         return beerService.listBeers();
     }
 
     @GetMapping(BEER_URI_ID)
-    public Beer getBeerById(@PathVariable("beerId") UUID beerId) {
-        log.debug("Get Beer by Id - in controller");
+    public BeerDTO getBeerById(@PathVariable("beerId") UUID beerId) {
+        log.debug("Get BeerDTO by Id - in controller");
         return beerService.getBeerById(beerId).orElseThrow(NotFoundException::new);
     }
 }

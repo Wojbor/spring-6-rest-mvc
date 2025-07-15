@@ -49,7 +49,7 @@ class CustomerControllerTest {
 
     @BeforeEach
     void setUp() {
-        customerServiceImpl = new CustomerServiceImpl();
+        //customerServiceImpl = new CustomerServiceImpl();
     }
 
     @Test

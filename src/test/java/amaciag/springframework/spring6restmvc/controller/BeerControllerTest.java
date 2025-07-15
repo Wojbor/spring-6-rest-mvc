@@ -1,6 +1,8 @@
 package amaciag.springframework.spring6restmvc.controller;
 
+import amaciag.springframework.spring6restmvc.mappers.BeerMapper;
 import amaciag.springframework.spring6restmvc.model.BeerDTO;
+import amaciag.springframework.spring6restmvc.repositories.BeerRepository;
 import amaciag.springframework.spring6restmvc.services.BeerService;
 import amaciag.springframework.spring6restmvc.services.BeerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,9 +49,14 @@ class BeerControllerTest {
     @Captor
     ArgumentCaptor<BeerDTO> beerArgumentCaptor;
 
+    @Autowired
+    BeerRepository beerRepository;
+    @Autowired
+    BeerMapper beerMapper;
+
     @BeforeEach
     void setUp() {
-        beerServiceImpl = new BeerServiceImpl();
+        beerServiceImpl = new BeerServiceImpl(beerRepository, beerMapper);
     }
 
     @Test

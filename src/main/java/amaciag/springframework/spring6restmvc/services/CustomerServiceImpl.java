@@ -1,96 +1,68 @@
 package amaciag.springframework.spring6restmvc.services;
 
+import amaciag.springframework.spring6restmvc.entities.Customer;
+import amaciag.springframework.spring6restmvc.mappers.CustomerMapper;
 import amaciag.springframework.spring6restmvc.model.CustomerDTO;
+import amaciag.springframework.spring6restmvc.repositories.CustomerRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
     private Map<UUID, CustomerDTO> customersDataMap;
 
-    public CustomerServiceImpl() {
-        this.customersDataMap = new HashMap<>();
+    private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
-        CustomerDTO customer1 = CustomerDTO
-                .builder()
-                .id(UUID.randomUUID())
-                .version(1)
-                .customerName("Arek")
-                .createdDate(LocalDateTime.now())
-                .lastModifyDate(LocalDateTime.now())
-                .build();
-
-        CustomerDTO customer2 = CustomerDTO
-                .builder()
-                .id(UUID.randomUUID())
-                .version(2)
-                .customerName("Lila")
-                .createdDate(LocalDateTime.now())
-                .lastModifyDate(LocalDateTime.now())
-                .build();
-
-        CustomerDTO customer3 = CustomerDTO
-                .builder()
-                .id(UUID.randomUUID())
-                .version(3)
-                .customerName("Marek")
-                .createdDate(LocalDateTime.now())
-                .lastModifyDate(LocalDateTime.now())
-                .build();
-
-        customersDataMap.put(customer1.getId(), customer1);
-        customersDataMap.put(customer2.getId(), customer2);
-        customersDataMap.put(customer3.getId(), customer3);
-
-    }
 
     @Override
     public Optional<CustomerDTO> getCustomerById(UUID id) {
-        return Optional.of(customersDataMap.get(id));
+        Customer foundCustomer = customerRepository.findById(id).get();
+        return Optional.of(customerMapper.customerToCustomerDto(foundCustomer));
     }
 
     @Override
     public List<CustomerDTO> listCustomers() {
-        return new ArrayList<>(customersDataMap.values());
+        List<Customer> foundCustomers = customerRepository.findAll();
+        return foundCustomers.stream().map(customerMapper::customerToCustomerDto).collect(Collectors.toList());
     }
 
     @Override
     public CustomerDTO saveCustomer(CustomerDTO customer) {
 
-        CustomerDTO savedCustomer = CustomerDTO.builder()
-                .id(UUID.randomUUID())
-                .version(customer.getVersion())
-                .customerName(customer.getCustomerName())
-                .createdDate(LocalDateTime.now())
-                .lastModifyDate(LocalDateTime.now())
-                .build();
+        Customer savedCustomer = customerMapper.customerDtoToCustomer(customer);
 
-        customersDataMap.put(customer.getId(), savedCustomer);
+        savedCustomer.setCreatedDate(LocalDateTime.now());
+        savedCustomer.setLastModifyDate(LocalDateTime.now());
 
-        return savedCustomer;
+        customerRepository.save(savedCustomer);
+
+        return customerMapper.customerToCustomerDto(savedCustomer);
     }
 
     @Override
     public void updateCustomerById(UUID customerId, CustomerDTO customer) {
-        CustomerDTO customerToUpdate = customersDataMap.get(customerId);
+        Customer customerToUpdate = customerRepository.findById(customerId).get();
         customerToUpdate.setCustomerName(customer.getCustomerName());
         customerToUpdate.setLastModifyDate(LocalDateTime.now());
-        customerToUpdate.setVersion(customer.getVersion() + 1);
-        customersDataMap.put(customerId, customerToUpdate);
+        customerRepository.save(customerToUpdate);
     }
 
     @Override
     public void deleteById(UUID customerId) {
-        customersDataMap.remove(customerId);
+        customerRepository.deleteById(customerId);
     }
 
     @Override
     public void patchCustomer(UUID customerId, CustomerDTO customer) {
-        CustomerDTO customerToUpdate = customersDataMap.get(customerId);
+        Customer customerToUpdate = customerRepository.findById(customerId).get();
 
         if (StringUtils.hasText(customer.getCustomerName())) {
             customerToUpdate.setCustomerName(customer.getCustomerName());
@@ -99,5 +71,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer.getVersion() != null) {
             customerToUpdate.setVersion(customer.getVersion());
         }
+
+        customerRepository.save(customerToUpdate);
     }
 }

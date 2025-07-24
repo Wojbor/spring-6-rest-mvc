@@ -108,7 +108,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public void updateBeerById(UUID beerId, BeerDTO beer) {
+    public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO beer) {
         BeerDTO beerToUpdate = beerMap.get(beerId);
         beerToUpdate.setBeerName(beer.getBeerName());
         beerToUpdate.setBeerStyle(beer.getBeerStyle());
@@ -116,6 +116,7 @@ public class BeerServiceImpl implements BeerService {
         beerToUpdate.setQuantityOnHand(beer.getQuantityOnHand());
         beerToUpdate.setPrice(beer.getPrice());
         beerMap.put(beerToUpdate.getId(), beerToUpdate);
+        return Optional.of(beerToUpdate);
 
     }
 

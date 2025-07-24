@@ -1,5 +1,6 @@
 package amaciag.springframework.spring6restmvc.services;
 
+import amaciag.springframework.spring6restmvc.entities.Beer;
 import amaciag.springframework.spring6restmvc.mappers.BeerMapper;
 import amaciag.springframework.spring6restmvc.model.BeerDTO;
 import amaciag.springframework.spring6restmvc.repositories.BeerRepository;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,11 +38,27 @@ public class BeerServiceJPA implements BeerService {
 
     @Override
     public BeerDTO saveNewBeer(BeerDTO beer) {
-        return null;
+        Beer savedBeer = beerMapper.beerDtoToBeer(beer);
+
+        savedBeer.setCreatedDate(LocalDateTime.now());
+        savedBeer.setUpdateDate(LocalDateTime.now());
+
+        beerRepository.save(savedBeer);
+
+        return beerMapper.beerToBeerDto(savedBeer);
     }
 
     @Override
     public void updateBeerById(UUID beerId, BeerDTO beer) {
+
+        beerRepository.findById(beerId).ifPresent(foundBeer -> {
+            foundBeer.setBeerName(beer.getBeerName());
+            foundBeer.setBeerStyle(beer.getBeerStyle());
+            foundBeer.setUpc(beer.getUpc());
+            foundBeer.setQuantityOnHand(beer.getQuantityOnHand());
+            foundBeer.setPrice(beer.getPrice());
+            beerRepository.save(foundBeer);
+        });
 
     }
 

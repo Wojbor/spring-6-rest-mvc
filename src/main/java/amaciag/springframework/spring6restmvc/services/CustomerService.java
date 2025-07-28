@@ -9,12 +9,14 @@ import java.util.UUID;
 public interface CustomerService {
 
     Optional<CustomerDTO> getCustomerById(UUID id);
+
     List<CustomerDTO> listCustomers();
+
     CustomerDTO saveCustomer(CustomerDTO customer);
 
-    void updateCustomerById(UUID customerId, CustomerDTO customer);
+    Optional<CustomerDTO> updateCustomerById(UUID customerId, CustomerDTO customer);
+
+    Optional<CustomerDTO> patchCustomer(UUID customerId, CustomerDTO customer);
 
     void deleteById(UUID customerId);
-
-    void patchCustomer(UUID customerId, CustomerDTO customer);
 }

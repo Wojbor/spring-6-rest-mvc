@@ -25,7 +25,8 @@ public class CustomerController {
     @PatchMapping(CUSTOMER_URI_ID)
     public ResponseEntity patchCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody CustomerDTO customer) {
 
-        customerService.patchCustomer(customerId, customer);
+        if(customerService.patchCustomer(customerId, customer).isEmpty())
+            throw new NotFoundException();
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -41,7 +42,8 @@ public class CustomerController {
     @PutMapping(CUSTOMER_URI_ID)
     public ResponseEntity updateCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody CustomerDTO customer) {
 
-        customerService.updateCustomerById(customerId, customer);
+        if(customerService.updateCustomerById(customerId, customer).isEmpty())
+            throw new NotFoundException();
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -52,7 +54,7 @@ public class CustomerController {
         CustomerDTO savedCustomer = customerService.saveCustomer(customer);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.LOCATION, "/api/v1/customer" + savedCustomer.getId());
+        headers.add(HttpHeaders.LOCATION, "/api/v1/customer/" + savedCustomer.getId());
 
         return new ResponseEntity(headers, HttpStatus.CREATED);
 
